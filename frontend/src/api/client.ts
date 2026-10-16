@@ -13,13 +13,20 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-api.interceptors.response.use(response => response, (error: unknown) => {
-  if (axios.isAxiosError(error) && error.response?.status === 401 && error.config?.url !== '/login') {
-    // Ignore a late response from an older session after a new login.
-    if (error.config?.headers.Authorization === `Bearer ${getToken()}`) {
-      setToken(null)
-      window.dispatchEvent(new Event('framevault:unauthorized'))
+api.interceptors.response.use(
+  (response) => response,
+  (error: unknown) => {
+    if (
+      axios.isAxiosError(error) &&
+      error.response?.status === 401 &&
+      error.config?.url !== '/login'
+    ) {
+      // Ignore a late response from an older session after a new login.
+      if (error.config?.headers.Authorization === `Bearer ${getToken()}`) {
+        setToken(null)
+        window.dispatchEvent(new Event('framevault:unauthorized'))
+      }
     }
-  }
-  return Promise.reject(error)
-})
+    return Promise.reject(error)
+  },
+)

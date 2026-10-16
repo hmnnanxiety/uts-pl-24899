@@ -2,7 +2,11 @@ const key = 'framevault.session'
 let memoryToken: string | null = null
 
 export function getToken(): string | null {
-  try { return sessionStorage.getItem(key) || memoryToken } catch { return memoryToken }
+  try {
+    return sessionStorage.getItem(key) || memoryToken
+  } catch {
+    return memoryToken
+  }
 }
 
 export function setToken(token: string | null) {
@@ -10,5 +14,7 @@ export function setToken(token: string | null) {
   try {
     if (token) sessionStorage.setItem(key, token)
     else sessionStorage.removeItem(key)
-  } catch { /* Private browser policies can disable storage; in-memory login still works. */ }
+  } catch {
+    /* Private browser policies can disable storage; in-memory login still works. */
+  }
 }

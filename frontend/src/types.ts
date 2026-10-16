@@ -1,4 +1,8 @@
-export interface User { id: number; name: string; email: string }
+export interface User {
+  id: number
+  name: string
+  email: string
+}
 export type Category = 'camera' | 'lens' | 'lighting' | 'tripod' | 'accessory'
 export type Condition = 'excellent' | 'good' | 'fair' | 'damaged'
 export type Availability = 'available' | 'in_use' | 'maintenance'
