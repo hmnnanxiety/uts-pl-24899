@@ -1,0 +1,17 @@
+.git
+.github
+
+node_modules/
+dist/
+.vite/
+
+.env
+.env.*
+!.env.example
+
+playwright-report/
+test-results/
+.verification/
+coverage/
+
+*.log
