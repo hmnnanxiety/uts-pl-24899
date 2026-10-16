@@ -39,7 +39,8 @@ window.addEventListener('beforeunload', beforeUnload)
 onBeforeUnmount(() => window.removeEventListener('beforeunload', beforeUnload))
 async function focusError() {
   await nextTick()
-  formElement.value?.querySelector<HTMLElement>('[aria-invalid="true"], [role="alert"]')?.focus()
+  const target = formElement.value?.querySelector<HTMLElement>('[aria-invalid="true"]') || formElement.value?.querySelector<HTMLElement>('[role="alert"]')
+  target?.focus()
 }
 async function submit() {
   if (busy.value) return

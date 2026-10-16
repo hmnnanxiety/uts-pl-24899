@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { LayoutDashboard, Grid2X2, LogOut, ArrowUpRight } from '@lucide/vue'
 import BrandMark from '../components/BrandMark.vue'
 import { useAuth } from '../composables/useAuth'
 const { user, logout } = useAuth()
 const route = useRoute(), router = useRouter(), busy = ref(false)
+watch(() => route.path, async () => {
+  await nextTick()
+  document.getElementById('main-content')?.focus({ preventScroll: true })
+})
 const initials = computed(() => user.value?.name.trim().split(/\s+/).slice(0, 2).map(part => part[0]).join('').toUpperCase() || 'ST')
 async function signOut() {
   if (busy.value) return
