@@ -7,6 +7,8 @@ export const router = createRouter({
     { path: '/login', name: 'login', component: () => import('../views/LoginView.vue'), meta: { title: 'Sign in', public: true } },
     { path: '/', component: () => import('../layouts/AppLayout.vue'), children: [
       { path: '', name: 'dashboard', component: () => import('../views/DashboardView.vue'), meta: { title: 'Overview' } },
+      { path: 'gear', name: 'catalog', component: () => import('../views/CatalogView.vue'), meta: { title: 'Equipment' } },
+      { path: 'gear/:id(\\d+)', name: 'gear-detail', component: () => import('../views/GearDetailView.vue'), meta: { title: 'Equipment record' } },
     ] },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('../views/NotFoundView.vue'), meta: { title: 'Page not found' } },
   ],
