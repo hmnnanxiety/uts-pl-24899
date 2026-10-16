@@ -8,6 +8,8 @@ export const router = createRouter({
     { path: '/', component: () => import('../layouts/AppLayout.vue'), children: [
       { path: '', name: 'dashboard', component: () => import('../views/DashboardView.vue'), meta: { title: 'Overview' } },
       { path: 'gear', name: 'catalog', component: () => import('../views/CatalogView.vue'), meta: { title: 'Equipment' } },
+      { path: 'gear/new', name: 'gear-new', component: () => import('../views/GearEditorView.vue'), meta: { title: 'Add equipment' } },
+      { path: 'gear/:id(\\d+)/edit', name: 'gear-edit', component: () => import('../views/GearEditorView.vue'), meta: { title: 'Edit equipment' } },
       { path: 'gear/:id(\\d+)', name: 'gear-detail', component: () => import('../views/GearDetailView.vue'), meta: { title: 'Equipment record' } },
     ] },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('../views/NotFoundView.vue'), meta: { title: 'Page not found' } },

@@ -1,0 +1,26 @@
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.required-mark { color: var(--accent); }
+.editor-layout { display: grid; grid-template-columns: minmax(0, 1fr) 240px; gap: 35px; }
+.equipment-form { min-width: 0; }
+.equipment-form fieldset { min-width: 0; padding: 0; margin: 0; border: 0; }
+.equipment-form > .alert { margin-top: 0; }
+.form-section { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; margin-bottom: 20px; padding: 30px; }
+.form-section header { display: flex; gap: 17px; margin-bottom: 28px; }
+.section-number { font-size: .65rem; font-family: ui-monospace, monospace; color: var(--accent); border: 1px solid #585142; border-radius: 50%; width: 31px; height: 31px; flex-shrink: 0; display: grid; place-items: center; }
+.form-section h2 { font-size: 1.12rem; display: flex; gap: 10px; align-items: center; margin: 3px 0 8px; }
+.form-section h2 svg { color: var(--muted); }
+.form-section header p { font-size: .73rem; color: var(--muted); margin: 0; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.field-hint { font-size: .69rem; color: var(--muted); margin: 0; }
+textarea { resize: vertical; min-height: 125px; }
+.form-actions { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; padding-top: 6px; }
+.form-actions > p { margin: 0; font-size: .68rem; color: var(--muted); }
+.form-aside { padding: 26px 0; }
+.form-aside h2 { font-size: 1.75rem; line-height: 1.15; margin: 20px 0; }
+.form-aside > p:last-of-type, .form-aside-note p { font-size: .78rem; line-height: 1.8; color: var(--muted); }
+.form-aside-note { margin-top: 35px; border-top: 1px solid var(--line); padding-top: 25px; }
+.form-aside-note span { font-size: .56rem; letter-spacing: .12em; color: var(--accent); }
+.form-aside-note p { margin-top: 12px; }
+.card-actions { display: flex; align-items: center; gap: 3px; }
+@media (max-width: 1200px) { .editor-layout { grid-template-columns: 1fr; } .form-aside { display: none; } }
+@media (max-width: 600px) { .form-section { padding: 22px 18px; } .form-grid { grid-template-columns: 1fr; } .form-actions { align-items: flex-start; flex-direction: column; } .form-actions .actions { width: 100%; } .form-actions .primary { flex: 1; } }
