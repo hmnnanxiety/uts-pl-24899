@@ -3,6 +3,23 @@
 .back-link { margin-bottom: 32px; }
 .catalog-summary { display: flex; align-items: center; justify-content: space-between; margin: 0 0 20px; color: var(--muted); font-size: .75rem; }
 .catalog-summary p { margin: 0; }
+.catalog-controls { display: flex; gap: 12px; margin-top: 38px; }
+.search-field { position: relative; flex: 1; min-width: 180px; }
+.search-field > svg { position: absolute; left: 15px; top: 15px; color: var(--muted); }
+.search-field input { padding-left: 44px; padding-right: 40px; height: 48px; }
+.search-field input::-webkit-search-cancel-button { display: none; }
+.search-field button { position: absolute; right: 4px; top: 4px; }
+.filter-select { min-width: 160px; }
+.filter-select select { height: 48px; }
+.category-filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 23px 0 18px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+.category-filters button { background: transparent; border: 1px solid transparent; color: var(--muted); padding: 10px 15px; min-height: 40px; border-radius: 4px; font-size: .73rem; }
+.category-filters button:hover { background: var(--surface); color: var(--text); }
+.category-filters button[aria-pressed=true] { background: #393328; color: var(--accent); border-color: #6d5a40; }
+.reset-filters { border: 0; background: transparent; color: var(--accent); display: inline-flex; align-items: center; gap: 7px; font-size: .69rem; padding: 8px; }
+.pagination { margin-top: 35px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.pagination span { color: var(--muted); font-size: .75rem; }
+@media (max-width: 1000px) { .catalog-controls { flex-wrap: wrap; } .search-field { flex-basis: 100%; } .filter-select { flex: 1; } }
+@media (max-width: 520px) { .category-filters { gap: 3px; } .category-filters button { padding: 9px 11px; } .catalog-summary { flex-wrap: wrap; gap: 8px; } .filter-select { min-width: 0; } }
 .detail-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 35px; }
 .detail-image { min-width: 0; }
 .detail-art { aspect-ratio: 1.1; background: #252521; border: 1px solid var(--line); border-radius: 6px; color: #b8ac88; position: relative; padding: 30px 15px; }

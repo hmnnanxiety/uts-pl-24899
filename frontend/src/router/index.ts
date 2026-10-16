@@ -14,7 +14,7 @@ export const router = createRouter({
     ] },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('../views/NotFoundView.vue'), meta: { title: 'Page not found' } },
   ],
-  scrollBehavior: (_to, _from, saved) => saved || { top: 0 },
+  scrollBehavior: (to, from, saved) => saved || (to.path === from.path ? false : { top: 0 }),
 })
 
 router.beforeEach(async to => {
