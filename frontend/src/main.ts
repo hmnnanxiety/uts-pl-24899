@@ -6,6 +6,7 @@ import '@fontsource/dm-sans/600.css'
 import '@fontsource/dm-sans/700.css'
 import './styles/base.css'
 import './styles/workspace.css'
+import './styles/inventory.css'
 import { router } from './router'
 
 createApp(App).use(router).mount('#app')
