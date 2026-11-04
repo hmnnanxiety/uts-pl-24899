@@ -37,6 +37,9 @@ services:
     image: framevault-backend:local
     restart: unless-stopped
     logging: *rotating-logs
+    dns_opt:
+      - "timeout:1"
+      - "attempts:1"
 
     environment:
       APP_NAME: FrameVault
