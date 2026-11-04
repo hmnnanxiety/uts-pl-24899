@@ -1,7 +1,14 @@
+x-logging: &rotating-logs
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   db:
     image: postgres:16-alpine
     restart: unless-stopped
+    logging: *rotating-logs
 
     environment:
       POSTGRES_DB: framevault
@@ -20,6 +27,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
+      start_period: 10s
 
   backend:
     build:
@@ -28,6 +36,7 @@ services:
 
     image: framevault-backend:local
     restart: unless-stopped
+    logging: *rotating-logs
 
     environment:
       APP_NAME: FrameVault
@@ -46,7 +55,7 @@ services:
       SESSION_DRIVER: database
       CACHE_STORE: database
       QUEUE_CONNECTION: database
-      LOG_CHANNEL: stderr
+      LOG_CHANNEL: stdout
 
     depends_on:
       db:
@@ -54,6 +63,13 @@ services:
 
     expose:
       - "80"
+
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
   frontend:
     build:
@@ -64,6 +80,7 @@ services:
 
     image: framevault-frontend:local
     restart: unless-stopped
+    logging: *rotating-logs
 
     ports:
       - "127.0.0.1:8080:80"

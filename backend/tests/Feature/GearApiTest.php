@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\GearItem;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -44,6 +45,7 @@ class GearApiTest extends TestCase
         $otherStaff = User::factory()->create();
 
         Sanctum::actingAs($staff);
+        Log::spy();
 
         $this->postJson('/api/gear', [
             'code' => 'CAM-001',
@@ -61,6 +63,12 @@ class GearApiTest extends TestCase
         $this->assertDatabaseHas('gear_items', [
             'code' => 'CAM-001',
             'created_by' => $staff->id,
+        ]);
+
+        Log::shouldHaveReceived('info')->once()->with('Gear created', [
+            'actor' => 'authenticated_staff',
+            'action' => 'gear.create',
+            'reason' => 'record_persisted',
         ]);
     }
 
@@ -130,6 +138,7 @@ class GearApiTest extends TestCase
     public function test_invalid_gear_returns_422(): void
     {
         Sanctum::actingAs(User::factory()->create());
+        Log::spy();
 
         $this->postJson('/api/gear', [
             'name' => '',
@@ -148,6 +157,13 @@ class GearApiTest extends TestCase
                 'status',
                 'purchase_date',
             ]);
+
+        Log::shouldHaveReceived('warning')->once()->with('Gear creation rejected', [
+            'actor' => 'authenticated_staff',
+            'action' => 'gear.create',
+            'reason' => 'validation_failed',
+            'failed_fields' => ['code', 'name', 'brand', 'category', 'condition', 'status', 'purchase_date'],
+        ]);
     }
 
     public function test_duplicate_inventory_code_is_rejected(): void

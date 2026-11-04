@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\GearItem;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class GearController extends Controller
 {
@@ -23,7 +25,12 @@ class GearController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $data = $request->validate([
+        $context = [
+            'actor' => 'authenticated_staff',
+            'action' => 'gear.create',
+        ];
+
+        $rules = [
             'code' => [
                 'required',
                 'string',
@@ -67,11 +74,28 @@ class GearController extends Controller
             ],
             'purchase_date' => ['nullable', 'date'],
             'notes' => ['nullable', 'string'],
-        ]);
+        ];
+
+        try {
+            $data = $request->validate($rules);
+        } catch (ValidationException $exception) {
+            Log::warning('Gear creation rejected', [
+                ...$context,
+                'reason' => 'validation_failed',
+                'failed_fields' => array_keys($exception->errors()),
+            ]);
+
+            throw $exception;
+        }
 
         $gear = GearItem::create([
             ...$data,
             'created_by' => $request->user()->id,
+        ]);
+
+        Log::info('Gear created', [
+            ...$context,
+            'reason' => 'record_persisted',
         ]);
 
         return response()->json([
