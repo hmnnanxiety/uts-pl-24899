@@ -1,0 +1,12 @@
+groups:
+  - name: framevault
+    rules:
+      - alert: FrameVaultServiceDown
+        expr: probe_success{job="framevault-health"} == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: 'Pemeriksaan layanan {{ $labels.service }} gagal'
+          description: 'Probe ke {{ $labels.instance }} gagal selama setidaknya 30 detik.'
+          action: 'Pertama jalankan docker compose ps -a {{ $labels.service }} untuk memeriksa status container.'

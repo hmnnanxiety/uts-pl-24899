@@ -9,6 +9,8 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     logging: *rotating-logs
+    labels:
+      io.framevault.monitor: "true"
 
     environment:
       POSTGRES_DB: framevault
@@ -37,6 +39,8 @@ services:
     image: framevault-backend:local
     restart: unless-stopped
     logging: *rotating-logs
+    labels:
+      io.framevault.monitor: "true"
     dns_opt:
       - "timeout:1"
       - "attempts:1"
@@ -84,6 +88,8 @@ services:
     image: framevault-frontend:local
     restart: unless-stopped
     logging: *rotating-logs
+    labels:
+      io.framevault.monitor: "true"
 
     ports:
       - "127.0.0.1:8080:80"
@@ -91,5 +97,77 @@ services:
     depends_on:
       - backend
 
+  prometheus:
+    image: prom/prometheus:v3.5.1
+    restart: unless-stopped
+    logging: *rotating-logs
+    ports:
+      - "127.0.0.1:9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus_data:/prometheus
+
+  grafana:
+    image: grafana/grafana:12.4.14
+    restart: unless-stopped
+    logging: *rotating-logs
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: "${GRAFANA_ADMIN_PASSWORD:?GRAFANA_ADMIN_PASSWORD is required}"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+
+  cadvisor:
+    image: ghcr.io/google/cadvisor:v0.60.6
+    restart: unless-stopped
+    logging: *rotating-logs
+    privileged: true
+    cgroup: host
+    command:
+      - --docker_only=true
+      - --enable_metrics=cpu,memory
+      - --store_container_labels=false
+      - --whitelisted_container_labels=io.framevault.monitor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+
+  node-exporter:
+    image: prom/node-exporter:v1.9.1
+    restart: unless-stopped
+    logging: *rotating-logs
+    pid: host
+    command:
+      - --path.rootfs=/host
+    volumes:
+      - /:/host:ro
+
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:1.5.3
+    restart: unless-stopped
+    logging: *rotating-logs
+    command:
+      - --nginx.scrape-uri=http://frontend:8081/stub_status
+
+  blackbox-exporter:
+    image: prom/blackbox-exporter:v0.27.0
+    restart: unless-stopped
+    logging: *rotating-logs
+    volumes:
+      - ./monitoring/blackbox.yml:/config/blackbox.yml:ro
+    command:
+      - --config.file=/config/blackbox.yml
+
 volumes:
   postgres_data:
+  prometheus_data:
+  grafana_data:
